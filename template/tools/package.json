@@ -1,0 +1,6 @@
+{
+  "name": "my-tools",
+  "private": true,
+  "type": "module",
+  "pi": { "extensions": ["./extensions"] }
+}

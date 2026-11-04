@@ -1,0 +1,22 @@
+# временное
+_показ/
+.DS_Store
+*.tmp
+
+# тяжёлое — на GitHub не отправляется (лимит 100 МБ на файл)
+*.jpg
+*.jpeg
+*.png
+*.heic
+*.gif
+*.mov
+*.mp4
+*.avi
+*.mkv
+*.mp3
+*.wav
+*.zip
+*.rar
+*.7z
+*.dmg
+*.iso

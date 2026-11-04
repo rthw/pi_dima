@@ -1,0 +1,17 @@
+{
+  "name": "pi-home",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Домашний набор для pi на DeepSeek: поиск, разбор папок, память с синхронизацией через GitHub, защита от удаления",
+  "type": "module",
+  "keywords": ["pi-package"],
+  "pi": {
+    "extensions": ["./extensions"],
+    "skills": ["./skills"]
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*",
+    "typebox": "*"
+  }
+}
