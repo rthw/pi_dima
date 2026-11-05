@@ -33,8 +33,9 @@ echo "есть: $(command -v pi)"
 
 step "3/7 GitHub CLI (gh)"
 if ! command -v gh >/dev/null 2>&1; then
-	url=$(curl -fsSL https://api.github.com/repos/cli/cli/releases/latest | grep -o 'https://[^"]*macOS_universal.zip' | head -1)
-	[ -n "$url" ] || die "не нашёл gh для macOS на GitHub"
+	case "$(uname -m)" in arm64) arch=arm64 ;; *) arch=amd64 ;; esac
+	url=$(curl -fsSL https://api.github.com/repos/cli/cli/releases/latest | grep -o "https://[^\"]*macOS_${arch}\.zip" | head -1 || true)
+	[ -n "$url" ] || die "не нашёл gh для macOS ($arch) на GitHub — запустите команду ещё раз"
 	tmp=$(mktemp -d)
 	curl -fsSL "$url" -o "$tmp/gh.zip"
 	unzip -q "$tmp/gh.zip" -d "$tmp"
