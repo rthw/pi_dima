@@ -15,7 +15,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/rthw/pi_dima/main/instal
 ```
 
 Скрипт ставит pi, GitHub CLI и Python с pandas для таблиц (команда `tpy`), просит войти в GitHub, создаёт приватный репозиторий `agent_home`
-(на втором компьютере — забирает его) и команду `agent`. Потом один раз: `agent` → `/login` → DeepSeek → ключ.
+(на втором компьютере — забирает его), спрашивает ключ DeepSeek и делает команду `agent`. Все пояснения — по ходу, в самом Терминале.
 
 ## Как пользоваться
 
