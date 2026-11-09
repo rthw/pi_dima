@@ -1,8 +1,8 @@
 {
-  "name": "pi-home",
+  "name": "pi-dima",
   "private": true,
   "version": "0.1.0",
-  "description": "Домашний набор для pi на DeepSeek: поиск, разбор папок, память с синхронизацией через GitHub, защита от удаления",
+  "description": "Набор для Димы (Google Таблицы) для pi на DeepSeek: поиск, разбор папок, память с синхронизацией через GitHub, защита от удаления",
   "type": "module",
   "keywords": ["pi-package"],
   "pi": {

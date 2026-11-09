@@ -1,12 +1,13 @@
 #!/bin/bash
 # Установка домашнего агента на Mac:
-#   bash -c "$(curl -fsSL https://raw.githubusercontent.com/rthw/pi_home/main/install.sh)"
+#   bash -c "$(curl -fsSL https://raw.githubusercontent.com/rthw/pi_dima/main/install.sh)"
 # Повторный запуск безопасен: уже сделанные шаги пропускаются.
 # На втором компьютере тот же скрипт заберёт папку agent_home с GitHub.
 set -euo pipefail
 
 OWNER="${PI_HOME_OWNER:-rthw}"
-PKG_URL="https://github.com/$OWNER/pi_home"
+PKG_REPO="pi_dima"
+PKG_URL="https://github.com/$OWNER/$PKG_REPO"
 HOME_REPO="agent_home"
 HOME_DIR="$HOME/agent_home"
 
@@ -74,7 +75,7 @@ git -C "$HOME_DIR" config user.name "$GH_USER"
 git -C "$HOME_DIR" config user.email "$GH_USER@users.noreply.github.com"
 
 step "6/7 Навыки и инструменты агента"
-pi install "git:github.com/$OWNER/pi_home"
+pi install "git:github.com/$OWNER/$PKG_REPO"
 pi install "$HOME_DIR/tools"
 python3 - "$HOME/.pi/agent/settings.json" <<'EOF'
 import json, os, sys
