@@ -1,7 +1,7 @@
 # pi_dima
 
-Помощник на [pi](https://pi.dev) и DeepSeek для Димы — прежде всего работа с Google Таблицами:
-найти, прочитать, посчитать, свести, заполнить, оформить. Плюс поиск в интернете, записи, разбор папок.
+Помощник на [pi](https://pi.dev) и DeepSeek для Димы — прежде всего работа с таблицами-файлами
+(Excel, CSV): посмотреть, посчитать, свести, почистить, сделать отчёт в Excel с графиком. Плюс поиск в интернете, записи, разбор папок.
 Форк [pi_home](https://github.com/rthw/pi_home).
 
 Записи сами синхронизируются через GitHub — на всех компьютерах одно и то же.
@@ -14,12 +14,8 @@
 bash -c "$(curl -fsSL https://raw.githubusercontent.com/rthw/pi_dima/main/install.sh)"
 ```
 
-Скрипт ставит pi и GitHub CLI, просит войти в GitHub, создаёт приватный репозиторий `agent_home`
+Скрипт ставит pi, GitHub CLI и Python с pandas для таблиц (команда `tpy`), просит войти в GitHub, создаёт приватный репозиторий `agent_home`
 (на втором компьютере — забирает его) и команду `agent`. Потом один раз: `agent` → `/login` → DeepSeek → ключ.
-
-Доступ к Google Таблицам: файл `google_client.json` (присылает Макс) положить в Загрузки, набрать `agent`
-и написать «подключи Google Таблицы» — агент сам положит ключ и откроет браузер для входа. На экране
-«Приложение не проверено» — «Дополнительно» → «Перейти…», отметить все галочки.
 
 ## Как пользоваться
 
@@ -29,9 +25,9 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/rthw/pi_dima/main/instal
 - «Запомни: давление утром 130/85»
 - «Разбери папку Загрузки: дубли и мусор — в Корзину, документы — в Документы/Сканы»
 - «Сделай инструмент, который показывает курс юаня»
-- «Вот таблица <ссылка> — посчитай продажи по менеджерам за октябрь и сделай лист со сводкой и графиком»
-- «Найди мою таблицу с остатками и допиши туда сегодняшний приход»
-- «Перенеси этот Excel из Загрузок в Google Таблицы и почисти дубли»
+- «В Загрузках выгрузка продаж — посчитай по менеджерам за октябрь, сделай Excel со сводкой и графиком»
+- «Сведи эти три файла в один и убери дубли по ИНН»
+- «Сравни остатки из двух таблиц — чего нет во второй?»
 
 Полезные команды внутри pi: `/model` — сменить модель (`deepseek-v4-pro` умнее, но дороже и не видит картинки),
 `/sync` — синхронизировать сейчас, `/reload` — подхватить новые инструменты, `/new` — новый разговор.
@@ -42,11 +38,10 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/rthw/pi_dima/main/instal
 |---|---|
 | `extensions/web.ts` | `web_search`, `web_fetch` — поиск и чтение страниц через Search/Fetch API DeepSeek (тот же ключ), запасной — DuckDuckGo |
 | `extensions/files.ts` | `file_list`, `file_show` (открыть в Finder под номерами), `file_move`, `file_trash` (в Корзину + журнал) |
-| `extensions/sheets.ts` | `sheets_*` — Google Таблицы через API: поиск, чтение, экспорт в CSV, запись, дописывание, очистка, создание, импорт Excel, оформление/сводные/графики (`batchUpdate`); вход `/google` |
 | `extensions/ask.ts` | `questionnaire` — вопросы с вариантами, несколько вкладками (из примеров pi) |
 | `extensions/guard.ts` | спрашивает «Разрешить?» перед `rm`, `sudo`, стиранием дисков/истории git и записью вне рабочей папки |
 | `extensions/sync.ts` | в папке с `.autosync`: `git pull` при старте, commit + push после каждого ответа |
-| `skills/` | навыки: `memory` (как вести записи), `review` (разбор папок), `toolmaking` (свои инструменты), `tables` (Google Таблицы: порядок работы и примеры оформления) |
+| `skills/` | навыки: `memory` (как вести записи), `review` (разбор папок), `toolmaking` (свои инструменты), `tables` (Excel/CSV: порядок работы, приёмы pandas, оформление отчёта; `peek.py` — обзор файла) |
 | `template/` | заготовка рабочей папки `~/agent_home`: `AGENTS.md`, `memory/`, `work/`, `tools/` |
 
 ## Безопасность — честно
@@ -54,18 +49,6 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/rthw/pi_dima/main/instal
 Агент не заперт в папке: он может выполнить команду где угодно на компьютере. Защита — подтверждение
 опасных действий (`guard.ts`) и удаление только в Корзину. Поэтому **включите Time Machine** (внешний диск)
 и не держите важное в единственном экземпляре. Фото и видео в `agent_home` на GitHub не уходят (`.gitignore`).
-
-## Для Макса: ключ Google (один раз)
-
-1. [console.cloud.google.com](https://console.cloud.google.com) → новый проект `pi-dima`.
-2. «APIs & Services» → Library → включить **Google Sheets API** и **Google Drive API**.
-3. «Google Auth Platform» (OAuth consent screen) → External, имя «pi_dima», свой email; Audience →
-   **Publish app** (In production). В режиме Testing вход протухает каждые 7 дней.
-   Без проверки Google будет предупреждение «не проверено» — для личного приложения нормально.
-4. Clients → Create client → **Desktop app** → Download JSON → переименовать в `google_client.json`
-   и передать Диме (Telegram). В git не класть.
-
-Токен Димы хранится у него в `~/.config/pi_home/google_token.json` (права 600), в `agent_home` не попадает.
 
 ## Обновления из pi_home
 

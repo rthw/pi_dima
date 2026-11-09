@@ -16,14 +16,14 @@ export PATH="$HOME/.pi/agent/bin:$HOME/.local/bin:$PATH"
 step() { printf '\n\033[1m▶ %s\033[0m\n' "$1"; }
 die() { printf '\n\033[31m✗ %s\033[0m\n' "$1"; exit 1; }
 
-step "1/7 Инструменты разработчика Apple (git)"
+step "1/8 Инструменты разработчика Apple (git)"
 if ! xcode-select -p >/dev/null 2>&1; then
 	xcode-select --install || true
 	die "В открывшемся окне нажмите «Установить», дождитесь конца и запустите эту команду ещё раз."
 fi
 echo "есть"
 
-step "2/7 pi (сам агент)"
+step "2/8 pi (сам агент)"
 if ! command -v pi >/dev/null 2>&1; then
 	echo "На вопросы установщика отвечайте Enter."
 	# `| cat` — чтобы установщик не запускал pi посреди установки.
@@ -32,7 +32,7 @@ if ! command -v pi >/dev/null 2>&1; then
 fi
 echo "есть: $(command -v pi)"
 
-step "3/7 GitHub CLI (gh)"
+step "3/8 GitHub CLI (gh)"
 if ! command -v gh >/dev/null 2>&1; then
 	case "$(uname -m)" in arm64) arch=arm64 ;; *) arch=amd64 ;; esac
 	url=$(curl -fsSL https://api.github.com/repos/cli/cli/releases/latest | grep -o "https://[^\"]*macOS_${arch}\.zip" | head -1 || true)
@@ -46,7 +46,7 @@ if ! command -v gh >/dev/null 2>&1; then
 fi
 echo "есть: $(command -v gh)"
 
-step "4/7 Вход в GitHub"
+step "4/8 Вход в GitHub"
 if ! gh auth status >/dev/null 2>&1; then
 	echo "Сейчас откроется браузер: войдите в GitHub и вставьте код, который покажет терминал."
 	gh auth login --hostname github.com --git-protocol https --web
@@ -55,7 +55,7 @@ gh auth setup-git
 GH_USER=$(gh api user -q .login)
 echo "вошли как $GH_USER"
 
-step "5/7 Рабочая папка $HOME_DIR"
+step "5/8 Рабочая папка $HOME_DIR"
 if [ -d "$HOME_DIR/.git" ]; then
 	echo "уже есть"
 elif gh repo view "$GH_USER/$HOME_REPO" >/dev/null 2>&1; then
@@ -74,7 +74,7 @@ fi
 git -C "$HOME_DIR" config user.name "$GH_USER"
 git -C "$HOME_DIR" config user.email "$GH_USER@users.noreply.github.com"
 
-step "6/7 Навыки и инструменты агента"
+step "6/8 Навыки и инструменты агента"
 pi install "git:github.com/$OWNER/$PKG_REPO"
 pi install "$HOME_DIR/tools"
 python3 - "$HOME/.pi/agent/settings.json" <<'EOF'
@@ -86,7 +86,7 @@ settings.setdefault("enabledModels", ["deepseek/deepseek-flash", "deepseek/deeps
 json.dump(settings, open(path, "w"), ensure_ascii=False, indent=2)
 EOF
 
-step "7/7 Команда «agent»"
+step "7/8 Команда «agent»"
 if ! grep -q "# pi_home" "$HOME/.zshrc" 2>/dev/null; then
 	cat >>"$HOME/.zshrc" <<'EOF'
 
