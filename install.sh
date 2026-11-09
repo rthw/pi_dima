@@ -165,14 +165,16 @@ EOF
 fi
 
 step 9 "Команда «agent»"
-if ! grep -q "# pi_home" "$HOME/.zshrc" 2>/dev/null; then
-	cat >>"$HOME/.zshrc" <<'EOF'
+# Терминал на старых маках запускает bash, на новых — zsh: прописываем в оба.
+for rc in "$HOME/.zshrc" "$HOME/.bash_profile"; do
+	grep -q "# pi_home" "$rc" 2>/dev/null && continue
+	cat >>"$rc" <<'EOF'
 
 # pi_home: «agent» — открыть помощника в рабочей папке
 export PATH="$HOME/.pi/agent/bin:$HOME/.local/bin:$PATH"
 agent() { cd "$HOME/agent_home" && pi "$@"; }
 EOF
-fi
+done
 say "есть"
 
 cat <<'EOF'
